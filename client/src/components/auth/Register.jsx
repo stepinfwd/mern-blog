@@ -3,18 +3,21 @@ import BgImage from "./BgImage";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import toast, { Toaster } from 'react-hot-toast';
 
-import  {postRegister}  from '../../store/actions/AuthAction';
+import { postRegister } from "../../store/actions/AuthAction";
 const Register = () => {
   const [state, setState] = useState({
     name: "",
     email: "",
     password: "",
   });
+  // const notify = () => toast("Wow so easy!");
 
   const dispatch = useDispatch();
-  const {loading,registerErrors} = useSelector((state) => state.AuthReducer);
+  const { loading, registerErrors } = useSelector((state) => state.AuthReducer);
   // const dispatch = useDispatch();
   const handleInputs = (e) => {
     setState({
@@ -24,18 +27,27 @@ const Register = () => {
   };
   const userRegister = async (e) => {
     e.preventDefault();
-    dispatch(postRegister(state))
-   
+    dispatch(postRegister(state));
   };
+  useEffect(() => {
+    console.log("fill er==out")
+if(registerErrors.response){
+    if (registerErrors.response.data.errors.length > 0) {
+      console.log("fill er")
+      registerErrors.response.data.errors.map((err) => toast(err.msg));
+    }}
+  }, [registerErrors]);
   return (
     <>
-      <Helmet> 
+      <Helmet>
         <title>User Register</title>
         <meta name="description" content="User register form" />
       </Helmet>
       <div className="row mt-80">
         <div className="col-sm-8">
           <BgImage />
+          <ToastContainer />
+
           {/* <Toaster
 						position='top-right'
 						reverseOrder={false}
@@ -87,7 +99,8 @@ const Register = () => {
                   <input
                     type="submit"
                     className="btn btn-default btn-block"
-                    value={loading ? '...' : 'Register'}
+                    value={loading ? "..." : "Register"}
+                    // onClick={notify}
                   />
                 </div>
               </form>
